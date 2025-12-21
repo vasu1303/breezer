@@ -6,7 +6,7 @@ export function useShortcut( onToggle: () => void) {
         let unlisten: (() => void) | null = null;
 
         const init = async () => {
-            if ( typeof window !== "undefined" && "__TARUI_INTERNALS__" in window) {
+            if ( typeof window !== "undefined" && "__TAURI_INTERNALS__" in window) {
                 unlisten = await setupShortcutListener(() => {
                     console.log("Global Shortcut Triggered");
                     onToggle();
