@@ -1,4 +1,4 @@
-import { Flame, MousePointerClick, Snowflake } from "lucide-react";
+import { Flame, MousePointerClick, Snowflake, Mic } from "lucide-react";
 import { TabId } from "../../types";
 import Logo from "../ui/Logo";
 
@@ -9,6 +9,7 @@ interface LeftSectionProps {
 export default function LeftSection({activeTab, onTabChange} : LeftSectionProps) {
 
     const menuItems = [
+        { id: TabId.Live, label: "Live", icon: <Mic />},
         { id: TabId.HowToUse, label: "How to Use", icon: <MousePointerClick />},
         { id: TabId.WhatIsBreeze, label: "What is Breeze?", icon: <Snowflake /> },
         { id: TabId.BuiltBy, label: "Built By", icon: <Flame />}

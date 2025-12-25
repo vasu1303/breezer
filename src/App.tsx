@@ -6,13 +6,17 @@ import LeftSection from "./components/sections/LeftSection";
 import RightSection from "./components/sections/RighSection";
 
 function App() {
-  const [activeTab, setActiveTab] = useState<TabId>(TabId.Live);
+  const [activeTab, setActiveTab] = useState<TabId>(TabId.HowToUse);
 
   const { status, transcript, startRecording, stopRecording } = useTranscription();
 
   const handleToggle = () => {
+    // Don't handle shortcuts when in "How to Use" tab (onboarding handles its own)
+    if (activeTab === TabId.HowToUse) {
+      return;
+    }
+    // Ctrl+T just toggles recording, doesn't change tabs
     if (status === TranscriptionStatus.IDLE || status === TranscriptionStatus.ERROR) {
-      setActiveTab(TabId.Live);
       startRecording(true);
     } else {
       stopRecording();
@@ -20,6 +24,10 @@ function App() {
   };
 
   const handleStop = () => {
+    // Don't handle shortcuts when in "How to Use" tab (onboarding handles its own)
+    if (activeTab === TabId.HowToUse) {
+      return;
+    }
     console.log("Kill switch: Stopping recording");
     stopRecording();
   };
@@ -35,7 +43,7 @@ function App() {
         status={status}
         transcript={transcript}
         onStart={() => {
-          setActiveTab(TabId.Live);
+          // Only start recording, don't change tabs
           startRecording(true);
         }}
         onStop={stopRecording}

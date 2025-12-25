@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useTranscription } from "../../hooks/useTranscription";
 import { useConfetti } from "../../hooks/useConfetti";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
+import { useShortcut } from "../../hooks/useShortcut";
+import { TranscriptionStatus } from "../../types";
 import { WelcomeHeader } from "./WelcomeHeader";
 import { ConfettiEffect } from "./ConfettiEffect";
 import { Step1Permissions } from "./steps/Step1Permissions";
@@ -29,6 +31,28 @@ export const Welcome = ({ onComplete }: WelcomeProps) => {
   const handleStartRecording = () => {
     startRecording(false); // false = don't broadcast/type
   };
+
+  // Handle shortcuts for test run (step 3)
+  const handleToggle = () => {
+    // Only work in step 3 (test run)
+    if (step === 3) {
+      if (status === TranscriptionStatus.IDLE || status === TranscriptionStatus.ERROR) {
+        handleStartRecording();
+      } else {
+        stopRecording();
+      }
+    }
+  };
+
+  const handleStop = () => {
+    // Only work in step 3 (test run)
+    if (step === 3) {
+      stopRecording();
+    }
+  };
+
+  // Set up shortcuts
+  useShortcut(handleToggle, handleStop);
 
   return (
     <>
