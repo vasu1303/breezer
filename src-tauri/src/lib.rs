@@ -14,19 +14,24 @@ pub fn run() {
         .setup(|app| {
             #[cfg(desktop)]
             {
-                use tauri_plugin_global_shortcut::{Code, GlobalShortcutExt, Modifiers, Shortcut};
-                //DEFINING THE SHORTCUT HERE
+                use tauri_plugin_global_shortcut::{Code, GlobalShortcutExt, Modifiers, Shortcut, ShortcutState};
+                use tauri::Emitter;
                 let ctrl_t = Shortcut::new(Some(Modifiers::CONTROL), Code::KeyT);
+                let ctrl_k = Shortcut::new(Some(Modifiers::CONTROL), Code::KeyK);
 
-                //REGISTERING THE SHORTCUT HERE
-                app.global_shortcut().on_shortcut(ctrl_t, move | app, _shortcut, event| {
-                    use tauri_plugin_global_shortcut::ShortcutState;
-
+                // Register Ctrl + T (Toggle)
+                app.global_shortcut().on_shortcut(ctrl_t, move |app, _shortcut, event| {
                     if event.state() == ShortcutState::Pressed {
-                        use tauri::Emitter;
+                        println!("Ctrl+T pressed - Toggle");
+                        let _ = app.emit("shortcut-pressed", "toggle");
+                    }
+                })?;
 
-                        println!("Shortcut Pressed");
-                        let _ = app.emit("shortcut-pressed", "start");
+                // Register Ctrl + K (Kill Switch / Stop)
+                app.global_shortcut().on_shortcut(ctrl_k, move |app, _shortcut, event| {
+                    if event.state() == ShortcutState::Pressed {
+                        println!("Ctrl+K pressed - Kill Switch");
+                        let _ = app.emit("shortcut-pressed", "stop");
                     }
                 })?;
             }

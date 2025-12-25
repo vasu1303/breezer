@@ -8,20 +8,23 @@ import RightSection from "./components/sections/RighSection";
 function App() {
   const [activeTab, setActiveTab] = useState<TabId>(TabId.Live);
 
-  const [ hasOnboarded, setHasOnBoarded ] = useState(false);
-
   const { status, transcript, startRecording, stopRecording } = useTranscription();
 
   const handleToggle = () => {
-    if (status === TranscriptionStatus.IDLE || status === TranscriptionStatus.ERROR ){
+    if (status === TranscriptionStatus.IDLE || status === TranscriptionStatus.ERROR) {
       setActiveTab(TabId.Live);
       startRecording(true);
     } else {
       stopRecording();
-    };
+    }
   };
 
-  useShortcut(handleToggle);
+  const handleStop = () => {
+    console.log("Kill switch: Stopping recording");
+    stopRecording();
+  };
+
+  useShortcut(handleToggle, handleStop);
 
   return (
     <main className="flex h-screen w-screen  text-zinc-100 font-sans selection:bg-teal-500/30 overflow-hidden">

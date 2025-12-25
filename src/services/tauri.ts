@@ -9,6 +9,18 @@ export const typeText = async (text: string) => {
     };
 };
 
-export const setupShortcutListener = async ( callback: () => void ): Promise<UnlistenFn> => {
-    return listen("shortcut-pressed", callback);
+export type ShortcutAction = "toggle" | "stop";
+
+export const setupShortcutListener = async (
+    onToggle: () => void,
+    onStop: () => void
+): Promise<UnlistenFn> => {
+    return listen<ShortcutAction>("shortcut-pressed", (event) => {
+        if (event.payload === "toggle") {
+            onToggle();
+        } else if (event.payload === "stop") {
+            console.log("Kill switch triggered");
+            onStop();
+        }
+    });
 }
